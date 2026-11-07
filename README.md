@@ -58,11 +58,7 @@ cd ipad-music-box
 scripts/install.sh
 ```
 
-The install script sets up two launchd agents. One starts the server at login and restarts it if it stops. The other updates yt-dlp every Monday at 04:00, because YouTube changes often and an old yt-dlp is the usual reason downloads stop working. Run `scripts/update-ytdlp.sh` by hand if songs stop downloading before then. Remove it all with `scripts/uninstall.sh`; your library stays.
-
-To run it in a terminal instead: `uv run python -m musicbox`.
-
-The script prints the two addresses:
+The install script prints the player address. The two addresses are:
 
 - Player: `http://<mac-name>.local:8080/`
 - Admin: `http://<mac-name>.local:8080/admin/`
@@ -71,9 +67,30 @@ The script prints the two addresses:
 
 The server itself is plain Python and should run on Linux too (it falls back from the Mac's hardware video encoder to a software one), but only the Mac setup is tested and only the Mac has an install script.
 
-### Keep the Mac awake
+### Keep the server running, always
 
-The music stops if the Mac sleeps. On a desktop Mac, turn on System Settings > Energy > "Prevent automatic sleeping when the display is off". On a laptop, the same option is under Battery > Options and applies while it is on power. The screen can still turn off.
+`scripts/install.sh` turns the server into a background service of your user account (two launchd agents), so you never have to start it by hand:
+
+- **The server** starts straight away and again every time you log in, and macOS restarts it if it ever stops or crashes. Its log is `~/Library/Logs/musicbox.log`.
+- **A weekly update** of yt-dlp runs every Monday at 04:00 and restarts the server. YouTube changes often, and an old yt-dlp is the usual reason downloads stop working. If songs stop downloading before then, run `scripts/update-ytdlp.sh` by hand.
+
+Two Mac settings make it truly always on:
+
+1. **Keep the Mac awake.** The music stops if the Mac sleeps. On a desktop Mac, turn on System Settings > Energy > "Prevent automatic sleeping when the display is off". On a laptop, the same option is under Battery > Options and applies while it is plugged in. The screen can still turn off.
+2. **Come back after a power cut or restart.** The service runs in your user account, so it starts when you log in. Either log in after a restart, or turn on System Settings > Users & Groups > "Automatically log in as" your user. (macOS hides that option while FileVault disk encryption is on; then log in by hand after a restart.)
+
+Check that it is running:
+
+```sh
+launchctl print gui/$(id -u)/org.musicbox.server | grep state   # "state = running"
+tail ~/Library/Logs/musicbox.log
+```
+
+To update the music box later: `git checkout uv.lock && git pull && scripts/install.sh && scripts/update-ytdlp.sh`. The weekly update edits `uv.lock`, so the first step drops that edit (otherwise `git pull` refuses to run), and the last step brings yt-dlp back to its newest release. The library stays. To stop and remove the service: `scripts/uninstall.sh`; your library and downloaded songs stay in `data/`.
+
+To try it in a terminal instead: stop the service with `launchctl bootout gui/$(id -u)/org.musicbox.server` (macOS would restart it if you only killed it), then run `uv run python -m musicbox`. Otherwise the two fight over port 8080. Run `scripts/install.sh` to bring the service back.
+
+The server listens on every network the Mac is connected to. Behind a home router, that means only your home network. It is not meant to be opened to the internet, or used on a public Wi-Fi: the player has no login, and the admin is protected only by a short PIN.
 
 ### First steps
 
@@ -109,7 +126,7 @@ To also stop the kids from browsing anywhere else when Guided Access is off: Set
 - Settings > General > **Auto-Lock** > **Never**, so the screen never locks and the music never stops.
 - If your iOS version shows **Display Auto-Lock** in the Guided Access settings, set it to Never too.
 - Keep the iPad on its charger: with the screen always on, the battery runs down in a few hours.
-- Keep the Mac awake (see above).
+- Keep the Mac awake (see [Keep the server running, always](#keep-the-server-running-always)).
 
 ## Automatic tags
 
