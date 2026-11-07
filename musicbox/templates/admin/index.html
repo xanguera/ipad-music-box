@@ -1,0 +1,28 @@
+{% extends "admin/base.html" %}
+{% block title %}Add music{% endblock %}
+{% block content %}
+{% if default_pin %}<div class="warn">The PIN is still the default (1234). Change it in <a href="{{ url_for('admin.settings_page') }}">Settings</a>, or the kids may guess it.</div>{% endif %}
+<h1>Add music</h1>
+<div class="box">
+  <h2 style="margin-top:0">Search YouTube</h2>
+  <form method="get" action="{{ url_for('admin.youtube_search') }}">
+    <input type="search" name="q" class="wide" placeholder="song or artist"> <button type="submit">Search</button>
+  </form>
+</div>
+<div class="box">
+  <h2 style="margin-top:0">Add from a YouTube link</h2>
+  <p class="muted">A video link adds one song. A playlist link adds every song in it. Nothing is downloaded yet; songs download the first time they are played.</p>
+  <form method="post" action="{{ url_for('admin.add_link') }}">
+    <div class="row"><label>Link</label><input type="text" name="url" class="wide" placeholder="https://www.youtube.com/..."></div>
+    {% include "admin/_add_fields.html" %}
+    <button type="submit">Add</button>
+  </form>
+</div>
+<div class="box">
+  <h2 style="margin-top:0">Status</h2>
+  <div class="row">{{ songs }} songs in the library, {{ playlists|length }} playlists.</div>
+  <div class="row">{{ cached }} songs downloaded, using {{ used|size }} of {{ cap|size }}.</div>
+  <div class="row muted">yt-dlp {{ ytdlp }}</div>
+  {% if jobs %}<h2>Downloads</h2><table>{% for id, st in jobs.items() %}<tr><td><a href="{{ url_for('admin.song', song_id=id) }}">{{ id }}</a></td><td>{{ st }}</td></tr>{% endfor %}</table>{% endif %}
+</div>
+{% endblock %}

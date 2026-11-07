@@ -1,0 +1,195 @@
+/* Written for iOS 9 Safari: no CSS variables, no grid, no flex "gap". Flexbox carries -webkit- twins. */
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: rgba(0,0,0,0); }
+html, body { margin: 0; padding: 0; }
+body { background: #15131f; color: #f4f1ff; font: 17px/1.35 "Helvetica Neue", Helvetica, Arial, sans-serif;
+       -webkit-text-size-adjust: 100%; }
+a { color: #ffd166; text-decoration: none; }
+button { font: inherit; color: inherit; cursor: pointer; border: 0; border-radius: 12px; background: #2d2843;
+         padding: 10px 16px; -webkit-appearance: none; }
+h2 { font-size: 26px; margin: 0 0 12px; }
+h3 { font-size: 19px; margin: 0 0 10px; color: #c9c2e8; }
+.empty { color: #a59ec7; }
+
+/* ---- top bar ---- */
+#top { position: fixed; top: 0; left: 0; right: 0; height: 64px; z-index: 20; background: #1f1b2e;
+       display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; padding: 0 12px; }
+.top-btn { font-size: 20px; font-weight: bold; padding: 10px 18px; margin-right: 12px; border-radius: 12px;
+           white-space: nowrap; }
+.browse-btn { background: #06d6a0; color: #111; }
+.admin-btn { background: #f78c1f; color: #111; }
+.refresh-btn { background: #2d2843; color: #fff; }
+.refresh-btn svg { width: 18px; height: 18px; fill: #fff; vertical-align: -3px; }
+
+/* ---- browse area ---- */
+#browse { padding: 80px 16px 140px; }
+.section { margin-bottom: 26px; }
+.links .biglink { display: inline-block; padding: 14px 20px; margin: 0 10px 10px 0; background: #2d2843;
+                  border-radius: 14px; font-size: 19px; }
+.foot { text-align: right; font-size: 14px; }
+.foot a { color: #6f6894; }
+
+.tiles { margin-right: -12px; }
+.tile { display: inline-block; vertical-align: top; width: 23%; margin: 0 1.3% 14px 0; background: #2d2843;
+        border-radius: 14px; overflow: hidden; color: #fff; }
+.tile img { display: block; width: 100%; height: auto; }
+/* Same shape as a thumbnail (16:9), so tiles with and without a picture line up. */
+.tile .noimg { display: block; height: 0; padding: 28.125% 0; line-height: 0; background: #3b3460;
+               text-align: center; font-size: 44px; color: #fff; }
+.tile .noimg.love { color: #ef476f; font-size: 56px; }
+.tile .name { display: block; font-weight: bold; padding: 8px 10px 0; font-size: 18px;
+              white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tile .count { display: block; padding: 0 10px 10px; color: #a59ec7; font-size: 14px; }
+@media (max-width: 800px) { .tile { width: 31.5%; } }
+
+.tags { line-height: 1; }
+.tag, .chip { display: inline-block; padding: 12px 16px; margin: 0 10px 10px 0; border-radius: 22px;
+              background: #3b3460; color: #fff; font-size: 18px; }
+.tag small { color: #b7afe0; font-size: 13px; }
+.tag.mid { font-size: 21px; background: #4a3f86; }
+.tag.big { font-size: 25px; background: #7b2cbf; }
+.chips { margin-bottom: 4px; }
+.chip { background: #ffd166; color: #111; font-weight: bold; }
+.chip b { margin-left: 6px; }
+
+.list-actions { margin-bottom: 10px; }
+.list-actions button { margin-right: 10px; background: #06d6a0; color: #111; font-weight: bold; padding: 12px 20px; }
+.list-actions .shuffle { background: #118ab2; color: #fff; }
+
+ul.songs { list-style: none; margin: 0; padding: 0; }
+.song { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center;
+        border-bottom: 1px solid #2a2540; }
+.song.playing { background: #2d2843; }
+.song .play { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center;
+              -webkit-flex: 1; flex: 1; min-width: 0; padding: 8px 0; color: #fff; }
+.song img { width: 128px; height: 72px; border-radius: 8px; background: #2d2843; -webkit-flex-shrink: 0; flex-shrink: 0; }
+.song .txt { -webkit-flex: 1; flex: 1; min-width: 0; padding: 0 12px; }
+.song .t { display: block; font-size: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.song .c { display: block; font-size: 14px; color: #a59ec7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.song .add { width: 56px; height: 56px; font-size: 28px; padding: 0; margin-left: 6px; border-radius: 28px; }
+.song .add.done { background: #06d6a0; color: #111; }
+.more-row { padding: 14px 0; text-align: center; }
+.more { display: inline-block; padding: 14px 30px; background: #2d2843; border-radius: 14px; }
+
+/* ---- player bar ---- */
+#bar { position: fixed; left: 0; right: 0; bottom: 0; height: 104px; z-index: 30; background: #0d0b14;
+       border-top: 1px solid #2a2540; display: -webkit-flex; display: flex;
+       -webkit-align-items: center; align-items: center; padding: 0 12px; }
+#screen { position: relative; width: 160px; height: 90px; background: #000; border-radius: 8px; overflow: hidden;
+          -webkit-flex-shrink: 0; flex-shrink: 0; }
+#video { width: 100%; height: 100%; background: #000; }
+#now { -webkit-flex: 1; flex: 1; min-width: 0; padding: 0 14px; }
+#now-title { font-size: 19px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#now-sub { font-size: 14px; color: #a59ec7; height: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#progress { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center;
+            font-size: 13px; color: #a59ec7; margin-top: 6px; }
+#seek { -webkit-flex: 1; flex: 1; margin: 0 8px; }
+#controls { white-space: nowrap; }
+#controls button { width: 60px; height: 60px; padding: 0; margin-left: 6px; font-size: 24px; border-radius: 30px;
+                   vertical-align: middle; }
+.love-btn { color: #fff; }
+.love-btn.on { color: #ef476f; }
+#b-play { background: #ef476f; width: 72px; height: 72px; font-size: 30px; }
+#b-prev svg, #b-next svg, #fs-prev svg, #fs-next svg { width: 26px; height: 26px; }
+#b-play svg, #fs-play svg { width: 32px; height: 32px; }
+#controls svg, #fs-bottom svg { display: block; margin: 0 auto; fill: #fff; }
+svg.i-play { position: relative; left: 2px; }  /* a triangle looks centred a little right of centre */
+#q-count { font-size: 12px; margin-left: 2px; }
+@media (max-width: 800px) { #b-big { display: none; } #screen { width: 128px; height: 72px; } }
+
+/* Full screen: only the video. The same <video> element moves, so playback is not interrupted.
+   A tap shows the controls over it (body.fs-show) for a few seconds. */
+#fs-controls { display: none; }
+/* Covers the video, small or full screen: a tap on the small one makes it full screen. */
+#fs-tap { position: absolute; top: 0; left: 0; right: 0; bottom: 0; cursor: pointer; }
+body.big #top, body.big #browse, body.big #now, body.big #controls { display: none; }
+body.big #bar { top: 0; height: auto; padding: 0; border: 0; background: #000; }
+body.big #screen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: auto; height: auto;
+                   border-radius: 0; z-index: 25; }
+body.big.fs-show #fs-controls { display: block; }
+#fs-controls button { position: absolute; background: rgba(0,0,0,.55); color: #fff; font-size: 26px; }
+/* Top right, side by side: the heart, then close. */
+#big-close, #fs-love { top: 16px; width: 64px; height: 64px; padding: 0; border-radius: 32px; }
+#big-close { right: 16px; }
+#big-close svg { display: block; width: 28px; height: 28px; margin: 0 auto; fill: #fff; }
+#fs-love { right: 92px; font-size: 34px; }
+#fs-love.on { color: #ef476f; }
+#fs-bottom { position: absolute; left: 0; right: 0; bottom: 24px; height: 84px; text-align: center; }
+#fs-progress { position: absolute; left: 24px; right: 24px; bottom: 124px; padding: 10px 16px; border-radius: 16px;
+               background: rgba(0,0,0,.55); color: #fff; font-size: 16px;
+               display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; }
+#fs-seek { -webkit-flex: 1; flex: 1; margin: 0 14px; height: 36px; }
+#fs-bottom button { position: static; width: 72px; height: 72px; margin: 0 14px; padding: 0; border-radius: 36px; }
+#fs-bottom #fs-play { width: 84px; height: 84px; border-radius: 42px; font-size: 32px; background: rgba(239,71,111,.85); }
+
+/* ---- admin inside the player page ----
+   Not a floating (position: fixed) box: iOS 9 Safari loses what is typed into a page shown in one.
+   The browsing part steps aside and the admin page takes its place; the frame grows to its page's
+   height (player.js), so the whole page scrolls. The player bar stays, so the music can be paused. */
+#admin-panel { display: none; background: #f6f5fb; padding-bottom: 120px; }
+body.show-admin #admin-panel { display: block; }
+body.show-admin #top, body.show-admin #browse { display: none; }
+#admin-scroll iframe { display: block; width: 100%; height: 600px; border: 0; }
+
+/* ---- PIN pad ---- */
+#pin-pad { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 60; background: rgba(13,11,20,.92); }
+body.show-pin #pin-pad { display: block; }
+.pin-box { width: 320px; margin: 60px auto 0; text-align: center; }
+.pin-title { font-size: 24px; font-weight: bold; margin-bottom: 10px; }
+#pin-dots { font-size: 28px; height: 40px; letter-spacing: 4px; }
+.pin-keys button { width: 88px; height: 72px; margin: 6px; font-size: 30px; font-weight: bold; background: #3b3460; }
+.pin-keys .pin-ok { background: #06d6a0; color: #111; font-size: 24px; }
+#pin-cancel { margin-top: 14px; background: transparent; color: #a59ec7; }
+
+/* ---- queue panel ---- */
+#queue-panel { display: none; position: fixed; top: 64px; right: 0; bottom: 104px; width: 420px; max-width: 100%;
+               z-index: 28; background: #1f1b2e; overflow-y: auto; -webkit-overflow-scrolling: touch;
+               border-left: 1px solid #2a2540; }
+body.show-queue #queue-panel { display: block; }
+.queue-head { padding: 12px; border-bottom: 1px solid #2a2540; }
+.queue-head b { font-size: 20px; margin-right: 10px; }
+.queue-head button { float: right; margin-left: 8px; padding: 8px 14px; }
+#queue-list { list-style: none; margin: 0; padding: 0; }
+#queue-list li { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center;
+                 border-bottom: 1px solid #2a2540; }
+#queue-list li.current { background: #3b3460; }
+#queue-list .qj { -webkit-flex: 1; flex: 1; min-width: 0; padding: 12px; color: #fff; }
+#queue-list .qj span { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#queue-list .qx { width: 48px; height: 48px; padding: 0; margin-right: 6px; font-size: 22px; border-radius: 24px; }
+
+#toast { position: fixed; left: 50%; bottom: 120px; width: 300px; margin-left: -150px; z-index: 40;
+         background: #ffd166; color: #111; text-align: center; padding: 12px; border-radius: 14px; font-weight: bold; }
+
+/* ---- admin ---- */
+body.admin { background: #f6f5fb; color: #1d1a2b; font-size: 16px; }
+body.admin a { color: #5a32c8; }
+.admin-nav { background: #1f1b2e; padding: 10px 12px; }
+.admin-nav a { color: #fff !important; display: inline-block; padding: 10px 12px; margin-right: 4px; border-radius: 10px; }
+.admin-nav a.on { background: #3b3460; }
+.admin-nav a.to-player { background: #06d6a0; color: #111 !important; font-weight: bold; }
+.admin-nav form { display: inline; float: right; }
+.admin-nav button { background: transparent; color: #a59ec7; }
+.admin main { padding: 16px; max-width: 980px; }
+.admin h1 { font-size: 24px; margin: 6px 0 16px; }
+.admin h2 { font-size: 20px; margin: 22px 0 10px; }
+.admin input[type=text], .admin input[type=search], .admin input[type=password], .admin input[type=number],
+.admin select { font: inherit; padding: 10px 12px; border: 1px solid #c9c4dd; border-radius: 10px; background: #fff;
+                -webkit-appearance: none; max-width: 100%; }
+.admin input.wide { width: 420px; }
+.admin button { background: #5a32c8; color: #fff; padding: 10px 16px; }
+.admin button.quiet { background: #e4e0f3; color: #1d1a2b; }
+.admin button.danger { background: #d62f4f; }
+.admin .box { background: #fff; border-radius: 14px; padding: 14px 16px; margin-bottom: 16px; border: 1px solid #e4e0f3; }
+.admin .row { margin-bottom: 10px; }
+.admin label { display: inline-block; min-width: 110px; color: #5d5878; }
+.admin .flash { background: #fff3c4; border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; }
+.admin .warn { background: #ffe0e5; border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; }
+.admin table { border-collapse: collapse; width: 100%; background: #fff; }
+.admin td, .admin th { border-bottom: 1px solid #eceaf5; padding: 8px; text-align: left; vertical-align: middle; }
+.admin td img { width: 96px; height: 54px; border-radius: 6px; display: block; }
+.admin .muted { color: #8a85a3; font-size: 14px; }
+.admin .pill { display: inline-block; background: #ece7ff; border-radius: 10px; padding: 2px 8px; margin: 1px 2px; font-size: 13px; }
+.admin td form { display: inline; }
+.admin td button { padding: 6px 10px; margin: 1px; }
+.admin .login { max-width: 320px; margin: 80px auto; text-align: center; }
+.admin .login input { font-size: 28px; width: 200px; text-align: center; letter-spacing: 6px; margin-bottom: 12px; }

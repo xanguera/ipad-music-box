@@ -1,0 +1,23 @@
+<div class="row"><label>Tags</label><input type="text" name="tags" class="wide" placeholder="comma separated, e.g. dance, Anna, car songs"></div>
+<div class="row"><label>Playlist</label>
+  <select name="playlist"><option value="">(pick one)</option>{% for p in playlists %}<option value="{{ p.id }}">{{ p.name }}</option>{% endfor %}</select>
+  or new: <input type="text" name="new_playlist" placeholder="new playlist name">
+  <span class="muted">Required: every song belongs to a playlist.</span></div>
+<script>
+// ES5. Stop the form before it is sent if no playlist is chosen, so ticked songs are not lost.
+(function () {
+  var scripts = document.getElementsByTagName("script");
+  var form = scripts[scripts.length - 1].parentNode;
+  while (form && form.tagName !== "FORM") { form = form.parentNode; }
+  if (!form) { return; }
+  form.addEventListener("submit", function (e) {
+    var pick = form.elements.playlist.value;
+    var name = form.elements.new_playlist.value.replace(/^\s+|\s+$/g, "");
+    if (!pick && !name) {
+      e.preventDefault();
+      alert("Pick a playlist or name a new one: every song belongs to a playlist.");
+      form.elements.playlist.focus();
+    }
+  });
+})();
+</script>

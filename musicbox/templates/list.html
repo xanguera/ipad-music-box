@@ -1,0 +1,8 @@
+{% extends layout %}
+{% from "_macros.html" import song_list %}
+{% block content %}
+<div class="section">
+  <h2>{{ name }}</h2>
+  {{ song_list(songs, None, empty) }}
+</div>
+{% endblock %}

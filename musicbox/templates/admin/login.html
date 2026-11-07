@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grown-ups - Music</title><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
+<body class="admin"><div class="login">
+<h1>Grown-ups only</h1>
+{% if error %}<div class="warn">{{ error }}</div>{% endif %}
+<form method="post"><input type="password" name="pin" inputmode="numeric" pattern="[0-9]*" autofocus placeholder="PIN"><br>
+<button type="submit">Enter</button></form>
+<p><a href="/" class="to-player">Back to the music</a></p>
+</div>{% include "admin/_to_player.html" %}</body></html>

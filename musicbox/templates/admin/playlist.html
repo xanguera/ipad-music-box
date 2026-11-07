@@ -1,0 +1,23 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ playlist.name }}{% endblock %}
+{% block content %}
+<h1>{{ playlist.name }}</h1>
+<form method="post" class="box"><input type="hidden" name="action" value="rename">
+  <input type="text" name="name" value="{{ playlist.name }}"> <button type="submit">Rename</button></form>
+<p class="muted">Add songs from <a href="{{ url_for('admin.index') }}">Add music</a> or from a song's page in the <a href="{{ url_for('admin.songs') }}">Library</a>.</p>
+<table>
+{% for s in songs %}
+  <tr id="i{{ s.item_id }}">
+    <td>{{ loop.index }}</td>
+    <td><img src="/thumb/{{ s.id }}.jpg" alt=""></td>
+    <td><a href="{{ url_for('admin.song', song_id=s.id) }}">{{ s.title }}</a><br><span class="muted">{{ s.channel }}</span></td>
+    <td style="white-space:nowrap">
+      {% for action, label in [("up", "&uarr;"), ("down", "&darr;"), ("remove", "Remove")] %}
+      <form method="post"{% if action == "remove" and s.lists == 1 %} onsubmit="return confirm('This is the song\'s only playlist, so it will leave the library. Remove it?')"{% endif %}><input type="hidden" name="action" value="{{ action }}"><input type="hidden" name="item" value="{{ s.item_id }}"><button class="quiet" type="submit">{{ label|safe }}</button></form>
+      {% endfor %}
+    </td>
+  </tr>
+{% else %}<tr><td>This playlist is empty.</td></tr>{% endfor %}
+</table>
+<form method="post" style="margin-top:24px" onsubmit="return confirm('Delete this playlist? Songs that are only in this playlist leave the library.')"><input type="hidden" name="action" value="delete"><button class="danger" type="submit">Delete playlist</button></form>
+{% endblock %}

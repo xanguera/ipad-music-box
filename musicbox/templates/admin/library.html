@@ -1,0 +1,20 @@
+{% extends "admin/base.html" %}
+{% block title %}Library{% endblock %}
+{% block content %}
+<h1>Library</h1>
+<form method="get"><input type="search" name="q" class="wide" value="{{ q }}" placeholder="title, artist or tag"> <button type="submit">Find</button></form>
+<table style="margin-top:12px">
+{% for s in songs %}
+  <tr>
+    <td><img src="/thumb/{{ s.id }}.jpg" alt=""></td>
+    <td><a href="{{ url_for('admin.song', song_id=s.id) }}"><b>{{ s.title }}</b></a><br><span class="muted">{{ s.channel }}{% if s.duration %} &middot; {{ s.duration|duration }}{% endif %}</span><br>
+      {% for t in s.tags %}<span class="pill">{{ t }}</span>{% endfor %}</td>
+    <td class="muted">{% if status[s.id] == "ready" %}downloaded{% elif status[s.id] == "missing" %}{% else %}{{ status[s.id] }}{% endif %}</td>
+    <td class="muted">{{ s.play_count }} plays</td>
+  </tr>
+{% else %}<tr><td>No songs{% if q %} match{% endif %}.</td></tr>
+{% endfor %}
+</table>
+<p>{% if offset %}<a href="{{ url_for('admin.songs', q=q, offset=[offset - page, 0]|max) }}">&larr; Previous</a>{% endif %}
+{% if has_more %} <a href="{{ url_for('admin.songs', q=q, offset=offset + page) }}">Next &rarr;</a>{% endif %}</p>
+{% endblock %}

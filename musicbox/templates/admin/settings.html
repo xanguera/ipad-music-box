@@ -1,0 +1,21 @@
+{% extends "admin/base.html" %}
+{% block title %}Settings{% endblock %}
+{% block content %}
+<h1>Settings</h1>
+<form method="post" class="box">
+  <div class="row"><label>New PIN</label><input type="password" name="pin" inputmode="numeric" placeholder="leave empty to keep"></div>
+  <div class="row"><label>Cache size</label><input type="number" name="cache_gb" step="1" min="1" value="{{ cache_gb }}"> GB
+    <span class="muted">Over this size, the least recently played songs are removed first. They download again when played.</span></div>
+  <div class="row"><label>Keep songs</label><input type="number" name="keep_days" step="1" min="1" value="{{ keep_days|int }}"> days
+    <span class="muted">Downloaded songs not played for this long are removed. They download again when played.</span></div>
+  <div class="row"><label>Video quality</label><select name="video_height">
+    {% for h in heights %}<option value="{{ h }}"{% if h == video_height %} selected{% endif %}>{{ h }}p</option>{% endfor %}
+  </select>
+    <span class="muted">Lower is smaller and quicker to prepare. Songs already prepared keep their quality until they are removed from the cache.</span></div>
+  <div class="row"><label><input type="checkbox" name="related"{% if related %} checked{% endif %}> Related songs</label>
+    <span class="muted">When the queue runs out, keep playing songs YouTube suggests after the last one. They join the library with the tag "related".</span></div>
+  <div class="row"><label><input type="checkbox" name="debug_log"{% if debug_log %} checked{% endif %}> Debug log</label>
+    <span class="muted">Log every request from the player and what its video does, to trace a song that stops. The iPad needs a page reload to pick up the change.</span></div>
+  <button type="submit">Save</button>
+</form>
+{% endblock %}

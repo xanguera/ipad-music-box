@@ -1,0 +1,13 @@
+{% extends "admin/base.html" %}
+{% block title %}Tags{% endblock %}
+{% block content %}
+<h1>Tags</h1>
+<p class="muted">Add tags to songs when you add them, or on a song's page. Renaming a tag to one that exists merges the two.</p>
+<table>
+{% for t in tags %}
+  <tr><td><b>{{ t.name }}</b></td><td class="muted"><a href="{{ url_for('admin.songs', q=t.name) }}">{{ t.count }} songs</a></td>
+    <td><form method="post"><input type="hidden" name="old" value="{{ t.name }}"><input type="text" name="new" placeholder="new name"> <button class="quiet" type="submit">Rename</button></form>
+      <form method="post" onsubmit="return confirm('Remove this tag from all its songs?')"><input type="hidden" name="old" value="{{ t.name }}"><input type="hidden" name="action" value="delete"><button class="danger" type="submit">Delete</button></form></td></tr>
+{% else %}<tr><td>No tags yet.</td></tr>{% endfor %}
+</table>
+{% endblock %}

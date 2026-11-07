@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Music">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="apple-touch-icon" href="{{ url_for('static', filename='icon.png') }}">
+<title>Music</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="player-page" data-debug="{{ 1 if debug_log else 0 }}">
+<div id="top">
+  <a href="/" class="top-btn browse-btn">&#9835; Lists &amp; tags</a>
+  <button id="b-admin" class="top-btn admin-btn" type="button">Admin</button>
+  <button id="b-refresh" class="top-btn refresh-btn" type="button" aria-label="Refresh"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.6 6.4A8 8 0 1 0 20 12h-2.5a5.5 5.5 0 1 1-1.6-3.9L13 11h7V4z"/></svg> Refresh</button>
+</div>
+
+<div id="browse">{% block content %}{% endblock %}</div>
+
+<div id="queue-panel">
+  <div class="queue-head">
+    <b>Queue</b>
+    <button id="queue-clear" type="button">Clear</button>
+    <button id="queue-close" type="button">Close</button>
+  </div>
+  <ul id="queue-list"></ul>
+</div>
+
+<div id="bar">
+  <div id="screen"><video id="video" preload="none" playsinline webkit-playsinline></video>
+    <!-- Full screen: a tap anywhere shows these for a few seconds. -->
+    <div id="fs-tap"></div>
+    <div id="fs-controls">
+      <button id="big-close" type="button" aria-label="Close full screen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.4 4.6 12 10.2l5.6-5.6 1.8 1.8-5.6 5.6 5.6 5.6-1.8 1.8-5.6-5.6-5.6 5.6-1.8-1.8 5.6-5.6-5.6-5.6z"/></svg></button>
+      <button id="fs-love" class="love-btn" type="button" aria-label="Love">&#9825;</button>
+      <div id="fs-progress"><span id="fs-cur">0:00</span><input id="fs-seek" type="range" min="0" max="100" step="0.1" value="0"><span id="fs-dur">0:00</span></div>
+      <div id="fs-bottom">
+        <button id="fs-prev" type="button" aria-label="Previous"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h2.5v14H6zM19 5v14L9 12z"/></svg></button>
+        <button id="fs-play" type="button" aria-label="Play"><svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg></button>
+        <button id="fs-next" type="button" aria-label="Next"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 5H18v14h-2.5zM5 5v14l10-7z"/></svg></button>
+      </div>
+    </div></div>
+  <div id="now">
+    <div id="now-title">Pick a song</div>
+    <div id="now-sub"></div>
+    <div id="progress"><span id="t-cur">0:00</span><input id="seek" type="range" min="0" max="100" step="1" value="0"><span id="t-dur">0:00</span></div>
+  </div>
+  <div id="controls">
+    <button id="b-love" class="love-btn" type="button" aria-label="Love">&#9825;</button>
+    <button id="b-prev" type="button" aria-label="Previous"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h2.5v14H6zM19 5v14L9 12z"/></svg></button>
+    <button id="b-play" type="button" aria-label="Play"><svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg></button>
+    <button id="b-next" type="button" aria-label="Next"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 5H18v14h-2.5zM5 5v14l10-7z"/></svg></button>
+    <button id="b-big" type="button" aria-label="Big video">&#9634;</button>
+    <button id="b-queue" type="button" aria-label="Queue">&#9776;<span id="q-count"></span></button>
+  </div>
+</div>
+<!-- The admin pages, inside the page rather than floating over it: iOS 9 Safari loses what is
+     typed into a page shown in a floating box. The admin's own "Player" link comes back here. -->
+<div id="admin-panel">
+  <div id="admin-scroll"></div>
+</div>
+
+<!-- PIN for the admin: buttons, not the keyboard. -->
+<div id="pin-pad">
+  <div class="pin-box">
+    <div class="pin-title">Grown-ups only</div>
+    <div id="pin-dots"></div>
+    <div class="pin-keys">
+      {% for k in ["1", "2", "3", "4", "5", "6", "7", "8", "9"] %}<button type="button" data-key="{{ k }}">{{ k }}</button>{% endfor %}
+      <button type="button" data-key="del" aria-label="Delete">&#9003;</button><button type="button" data-key="0">0</button><button type="button" data-key="ok" class="pin-ok">OK</button>
+    </div>
+    <button type="button" id="pin-cancel">Cancel</button>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='player.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{% extends layout %}
+{% from "_macros.html" import song_list %}
+{% block content %}
+<div class="section">
+  <h2>{% if order == "added" %}Newest songs{% else %}All songs A&ndash;Z{% endif %}</h2>
+  {{ song_list(songs, next_url) }}
+</div>
+{% endblock %}

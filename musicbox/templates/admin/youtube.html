@@ -1,0 +1,82 @@
+{% extends "admin/base.html" %}
+{% block title %}YouTube search{% endblock %}
+{% block content %}
+<h1>Search YouTube</h1>
+<form method="get"><input type="search" name="q" class="wide" value="{{ q }}"> <button type="submit">Search</button></form>
+{% if error %}<div class="warn">Search failed: {{ error }}</div>{% endif %}
+{% if q and not error %}
+<form method="post" action="{{ url_for('admin.add') }}" id="yt-form">
+  <input type="hidden" name="back" value="{{ url_for('admin.youtube_search', q=q) }}">
+  <div class="box" style="margin-top:16px">
+    <p class="muted" style="margin-top:0">Tick the songs to add, on as many pages as you like. The playlist and tags apply to all ticked songs.</p>
+    {% include "admin/_add_fields.html" %}
+    <button type="submit">Add ticked songs</button> <span id="yt-ticked" class="muted">0 ticked</span>
+  </div>
+  <p id="yt-hidden" class="muted" data-hidden="{{ hidden }}"{% if not hidden %} style="display:none"{% endif %}><span>{{ hidden }}</span> already in your library, not shown.</p>
+  <table id="yt-results">
+    <tr><td><input type="checkbox" id="tick-all"></td><td colspan="3"><label for="tick-all"><b>Tick all shown</b></label></td></tr>
+    {% include "admin/_yt_rows.html" %}
+  </table>
+  {% if not results %}<p id="yt-none" class="muted">No new songs on this page.</p>{% endif %}
+  <p>{% if next_offset %}<button type="button" class="quiet" id="yt-more" data-next="{{ next_offset }}">More results</button>{% endif %}
+    <button type="submit">Add ticked songs</button></p>
+</form>
+<script>
+// ES5, so it also works when the admin page is opened on the iPad.
+(function () {
+  var form = document.getElementById("yt-form");
+  var table = document.getElementById("yt-results");
+  var more = document.getElementById("yt-more");
+  var q = {{ q|tojson }};
+
+  function boxes() { return form.querySelectorAll('input[name="id"]'); }
+  function countTicked() {
+    var n = 0, all = boxes();
+    for (var i = 0; i < all.length; i++) { if (all[i].checked) { n++; } }
+    document.getElementById("yt-ticked").textContent = n + " ticked";
+  }
+  form.addEventListener("change", countTicked);
+
+  document.getElementById("tick-all").addEventListener("change", function () {
+    var all = boxes();
+    for (var i = 0; i < all.length; i++) { all[i].checked = this.checked; }
+    countTicked();
+  });
+
+  if (!more) { return; }
+  more.addEventListener("click", function () {
+    more.disabled = true;
+    more.textContent = "Loading...";
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "?q=" + encodeURIComponent(q) + "&offset=" + more.getAttribute("data-next") + "&append=1", true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState !== 4) { return; }
+      var data = null;
+      try { data = JSON.parse(xhr.responseText); } catch (e) { data = null; }
+      more.disabled = false;
+      if (xhr.status !== 200 || !data) { more.textContent = "More results (try again)"; return; }
+      // Add the new rows, skipping any YouTube repeats of a song already on the page.
+      var tmp = document.createElement("tbody");
+      tmp.innerHTML = data.rows;
+      var rows = tmp.querySelectorAll("tr.yt-row");
+      for (var i = 0; i < rows.length; i++) {
+        if (!table.querySelector('tr[data-id="' + rows[i].getAttribute("data-id") + '"]')) {
+          table.appendChild(rows[i]);
+        }
+      }
+      var hidden = document.getElementById("yt-hidden");
+      var total = parseInt(hidden.getAttribute("data-hidden"), 10) + data.hidden;
+      hidden.setAttribute("data-hidden", total);
+      hidden.querySelector("span").textContent = total;
+      hidden.style.display = total ? "" : "none";
+      var none = document.getElementById("yt-none");
+      if (none && table.querySelector("tr.yt-row")) { none.style.display = "none"; }
+      if (data.next) { more.setAttribute("data-next", data.next); more.textContent = "More results"; }
+      else { more.parentNode.removeChild(more); }
+    };
+    xhr.send(null);
+  });
+})();
+</script>
+{% endif %}
+{% endblock %}

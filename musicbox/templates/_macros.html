@@ -1,0 +1,26 @@
+{% macro song_row(s) -%}
+<li class="song" data-id="{{ s.id }}" data-title="{{ s.title }}" data-channel="{{ s.channel }}" data-duration="{{ s.duration or '' }}">
+  <a class="play" href="#"><img src="/thumb/{{ s.id }}.jpg" width="128" height="72" alt="">
+    <span class="txt"><span class="t">{{ s.title }}</span><span class="c">{{ s.channel }}{% if s.duration %} &middot; {{ s.duration|duration }}{% endif %}</span></span></a>
+  <button class="add" type="button" aria-label="Add to queue">+</button>
+</li>
+{%- endmacro %}
+
+{% macro song_list(songs, next_url=None, empty="No songs here yet.") -%}
+<div class="list-actions">
+  <button class="playall" type="button">&#9654; Play all</button>
+  <button class="shuffle" type="button">&#8644; Shuffle</button>
+</div>
+{% if songs %}
+<ul class="songs">{% for s in songs %}{{ song_row(s) }}
+{% endfor %}{% if next_url %}<li class="more-row"><a class="more" href="{{ next_url }}">More songs</a></li>{% endif %}</ul>
+{% else %}<p class="empty">{{ empty }}</p>{% endif %}
+{%- endmacro %}
+
+{% macro tag_cloud(tags, chosen=[]) -%}
+<div class="tags">{% for t in tags %}<a class="tag{% if t.count >= 20 %} big{% elif t.count >= 6 %} mid{% endif %}" href="/tags?{% for c in chosen %}t={{ c|urlencode }}&amp;{% endfor %}t={{ t.name|urlencode }}">{{ t.name }} <small>{{ t.count }}</small></a>{% endfor %}</div>
+{%- endmacro %}
+
+{% macro playlist_tiles(playlists, wrap=True) -%}
+{% if wrap %}<div class="tiles">{% endif %}{% for p in playlists %}<a class="tile" href="/playlist/{{ p.id }}">{% if p.cover %}<img src="/thumb/{{ p.cover }}.jpg" alt="">{% else %}<span class="noimg">&#9835;</span>{% endif %}<span class="name">{{ p.name }}</span><span class="count">{{ p.count }} songs</span></a>{% endfor %}{% if wrap %}</div>{% endif %}
+{%- endmacro %}

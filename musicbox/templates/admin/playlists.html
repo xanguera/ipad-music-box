@@ -1,0 +1,10 @@
+{% extends "admin/base.html" %}
+{% block title %}Playlists{% endblock %}
+{% block content %}
+<h1>Playlists</h1>
+<form method="post" class="box"><input type="text" name="name" placeholder="new playlist name"> <button type="submit">Create</button></form>
+<table>
+{% for p in playlists %}<tr><td><a href="{{ url_for('admin.playlist', playlist_id=p.id) }}"><b>{{ p.name }}</b></a></td><td class="muted">{{ p.count }} songs</td></tr>
+{% else %}<tr><td>No playlists yet.</td></tr>{% endfor %}
+</table>
+{% endblock %}

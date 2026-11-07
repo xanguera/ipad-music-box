@@ -1,0 +1,11 @@
+{% for r in results %}
+<tr class="yt-row" data-id="{{ r.id }}">
+  <td><input type="checkbox" name="id" value="{{ r.id }}" id="c-{{ r.id }}"></td>
+  <td><label for="c-{{ r.id }}"><img src="/thumb/{{ r.id }}.jpg" alt=""></label></td>
+  <td><label for="c-{{ r.id }}"><b>{{ r.title }}</b><br><span class="muted">{{ r.channel }}{% if r.duration %} &middot; {{ r.duration|duration }}{% endif %}</span></label>
+    <input type="hidden" name="title_{{ r.id }}" value="{{ r.title }}">
+    <input type="hidden" name="channel_{{ r.id }}" value="{{ r.channel }}">
+    <input type="hidden" name="duration_{{ r.id }}" value="{{ r.duration or '' }}"></td>
+  <td><a href="https://www.youtube.com/watch?v={{ r.id }}" target="_blank" rel="noopener">watch</a></td>
+</tr>
+{% endfor %}

@@ -1,0 +1,26 @@
+<script>
+// ES5. Inside the player's admin panel, the links back to the music, and logging out, close the
+// panel instead of opening a second player inside it.
+(function () {
+  if (window.parent === window || !window.parent.musicboxCloseAdmin) { return; }
+  var links = document.querySelectorAll("a.to-player");
+  for (var i = 0; i < links.length; i++) {
+    links[i].addEventListener("click", function (e) {
+      e.preventDefault();
+      window.parent.musicboxCloseAdmin();
+    });
+  }
+  var logout = document.querySelector("form.logout");
+  if (logout) {
+    logout.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", logout.getAttribute("action"), true);
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) { window.parent.musicboxCloseAdmin(); }
+      };
+      xhr.send(null);
+    });
+  }
+})();
+</script>

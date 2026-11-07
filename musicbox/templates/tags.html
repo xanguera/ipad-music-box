@@ -1,0 +1,12 @@
+{% extends layout %}
+{% from "_macros.html" import song_list, tag_cloud %}
+{% block content %}
+<div class="section">
+  <h2>{% if chosen %}Songs tagged{% else %}Pick a tag{% endif %}</h2>
+  {% if chosen %}<div class="chips">{% for c in chosen %}<a class="chip" href="/tags?{% for o in chosen if o != c %}t={{ o|urlencode }}&amp;{% endfor %}">{{ c }} <b>&times;</b></a>{% endfor %}</div>{% endif %}
+</div>
+{% if related %}
+<div class="section"><h3>{% if chosen %}Narrow down with another tag{% else %}All tags{% endif %}</h3>{{ tag_cloud(related, chosen) }}</div>
+{% endif %}
+{% if chosen %}<div class="section">{{ song_list(songs, next_url, "No songs have all these tags.") }}</div>{% endif %}
+{% endblock %}

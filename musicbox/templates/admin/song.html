@@ -1,0 +1,34 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ song.title }}{% endblock %}
+{% block content %}
+<h1>{{ song.title }}</h1>
+<div class="box">
+  <img src="/thumb/{{ song.id }}.jpg" alt="" style="width:320px;max-width:100%;border-radius:10px">
+  <p class="muted"><a href="https://www.youtube.com/watch?v={{ song.id }}" target="_blank" rel="noopener">On YouTube</a>
+    &middot; {{ song.play_count }} plays &middot; {% if status == "ready" %}downloaded{% elif status == "missing" %}not downloaded yet{% else %}{{ status }}{% endif %}</p>
+  <form method="post">
+    <input type="hidden" name="action" value="save">
+    <div class="row"><label>Title</label><input type="text" name="title" class="wide" value="{{ song.title }}"></div>
+    <div class="row"><label>Artist</label><input type="text" name="channel" class="wide" value="{{ song.channel }}"></div>
+    <div class="row"><label>Tags</label><input type="text" name="tags" class="wide" value="{{ song.tags|join(', ') }}" placeholder="comma separated"></div>
+    <button type="submit">Save</button>
+  </form>
+</div>
+<div class="box">
+  <h2 style="margin-top:0">Playlists</h2>
+  <p>{% for p in in_playlists %}<a class="pill" href="{{ url_for('admin.playlist', playlist_id=p.id) }}">{{ p.name }}</a>{% else %}<span class="muted">Not in any playlist.</span>{% endfor %}</p>
+  <form method="post"><input type="hidden" name="action" value="add_to_playlist">
+    <select name="playlist"><option value="">(pick)</option>{% for p in playlists %}<option value="{{ p.id }}">{{ p.name }}</option>{% endfor %}</select>
+    or new: <input type="text" name="new_playlist" placeholder="new playlist name">
+    <button type="submit">Add to playlist</button></form>
+</div>
+<div class="box">
+  <h2 style="margin-top:0">File</h2>
+  {% if status == "ready" %}
+  <form method="post"><input type="hidden" name="action" value="drop_file"><button class="quiet" type="submit">Remove downloaded file</button></form>
+  {% else %}
+  <form method="post"><input type="hidden" name="action" value="download"><button class="quiet" type="submit">Download now</button></form>
+  {% endif %}
+  <form method="post" style="margin-top:12px" onsubmit="return confirm('Delete this song from the library?')"><input type="hidden" name="action" value="delete"><button class="danger" type="submit">Delete song</button></form>
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends layout %}
+{% from "_macros.html" import tag_cloud, playlist_tiles %}
+{% block content %}
+{% if not total %}
+<div class="section"><h2>No music yet</h2><p class="empty">Ask a grown-up to add songs: tap the orange Admin button.</p></div>
+{% else %}
+<div class="section"><h2>Lists</h2>
+<div class="tiles">
+  <a class="tile" href="/loved"><span class="noimg love">&#9829;</span><span class="name">Loved</span><span class="count">{{ loved }} songs</span></a>
+  <a class="tile" href="/recent">{% if recent %}<img src="/thumb/{{ recent[0].id }}.jpg" alt="">{% else %}<span class="noimg">&#9719;</span>{% endif %}<span class="name">Played lately</span><span class="count">&nbsp;</span></a>
+  <a class="tile" href="/songs"><span class="noimg">&#9835;</span><span class="name">All songs</span><span class="count">{{ total }} songs</span></a>
+  {{- playlist_tiles(playlists, wrap=False) -}}
+</div></div>
+{% if tags %}
+<div class="section"><h2>Tags</h2>{{ tag_cloud(tags) }}</div>
+{% endif %}
+{% endif %}
+{% endblock %}

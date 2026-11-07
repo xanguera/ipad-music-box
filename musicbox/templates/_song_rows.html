@@ -1,0 +1,2 @@
+{% from "_macros.html" import song_row %}{% for s in songs %}{{ song_row(s) }}
+{% endfor %}{% if next_url %}<li class="more-row"><a class="more" href="{{ next_url }}">More songs</a></li>{% endif %}
